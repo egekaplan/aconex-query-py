@@ -8,7 +8,7 @@ Please note that you’ll need Organisation Admin rights in Aconex and an API Au
 ### Set up Aconex: 
 First log into Aconex as Organisation Admin and go to ‘User Role Configuration’ under setup and grant ‘Web Services API’ access for the appropriate user group within your organisation. 
 
-Then create an API User account on Aconex and add this user to all of the projects in the portfolio of interest. Finally, go into ‘User Role Assignment’ and ensure that the API User is added to the user group with ‘Web Services API’ access. 
+Then create an API User account on Aconex and add this user to all of the projects in the portfolio of interest. Finally, go into ‘User Role Assignment’ and ensure that the API User is added to the user group with ‘Web Services API’ access.
 
 ### Setting up and Running the Query: 
 Start at Section 2 and enter the search date range for the query using the date fields. For the initial query its recommended that you run a single day to make sure that everything is working correctly.
@@ -18,12 +18,10 @@ Then go to Section 4 and enter the API Credentials for the API User and the API 
 ### Running the query
 Go to 'Runtime' and select 'Run all'. 
 
-Please note that when you first execute the notebook you'll need to complete the google authorisation process in Section 3 before the code will progress. If you don’t want to do this and want to just save the temporary file to a local disk then you can delete or hash out the relevant bits of code in Section 1,3 and 7 and execute the code without this functionality. 
-
-Also, please note that the API queries in Section 7 can take a while to run depending on the search window selected. If this times out while using google colab, please consider reducing the search window range or importing the code in to Jupyter Labs. 
-
-Once completed save a local copy of the temporary csv file or open your drive account to access the retrieved data. 
-
+Also, please note that the API queries can take a while to run depending on the search window selected.
+ 
+Once completed save a local copy of the temporary csv file to access the retrieved data.
+ 
 ## Authors:
 @egekaplan <br>
 Thanks to @AddVennture
