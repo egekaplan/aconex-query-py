@@ -5,18 +5,12 @@ import numpy as np
 import csv
 import os
 
-
-# # Import PyDrive and associated libraries.
-# from pydrive.auth import GoogleAuth
-# from pydrive.drive import GoogleDrive
-# from oauth2client.client import GoogleCredentials
 from dotenv import load_dotenv
-
 load_dotenv()
 
-#search dates
-strt_date = "2021-02-01" 
-end_date = "2021-02-6"
+#search dates YYYYMMDD
+strt_date = "2023-08-18" 
+end_date = "2023-08-25"
 
 # search windows
 srch_wdw = pd.date_range(strt_date, end_date)
@@ -27,7 +21,7 @@ for day in srch_wdw:
   a = str(day)[0:10] # taking at most 10 chars of day in search windows
   b = a.replace('-','') # removing hyphens from dates
   dates.append(b) # adding into list 
-#print(dates)
+print(f"DATES: {dates} ")
 
 # SETTING UP THE ACONEX API CONNECTION
 
@@ -36,19 +30,22 @@ password = os.getenv("ACONEX_PASSWORD")
 key = os.getenv("ACONEX_KEY")
 
 b_url='https://uk1.aconex.co.uk/api/' # base path for all Aconex web services
-headers={'Accept': 'application/vnd.aconex.mail.v2+xml','Authorization': 'Bearer {0}'.format(key)}
+headers={'Accept': 'application/vnd.aconex.mail.v2+xml','Authorization': f'Bearer {key}'}
 
 
 # DEFINED FUNCTIIONS
 
-# Generates a list of project mail, using "List Mail (Version 2) in the Aconex Mail API"
 def get_inmail(aconex_id,strt_date,end_date):
+    
+    """
+    Generates a list of project mail, using "List Mail (Version 2) in the Aconex Mail API"
+    """
     mailbox='inbox' #mailbox for querying, available alternatives are: inbox, sentbox, draftbox
-    srch_qry='sentdate:[{0} TO {1}]'.format(strt_date,end_date)
+    srch_qry=f'sentdate:[{strt_date} TO {end_date}]'
     r_fields=('corrtypeid') #check mail schema first to confirm result field availability - Available options: subject,sentdate,responsedate
     s_field='sentdate' #results sorted by correspondence type 
     data=rq.get(
-      'https://uk1.aconex.co.uk/api/projects/{0}/mail'.format(aconex_id),
+      f'https://uk1.aconex.co.uk/api/projects/{aconex_id}/mail',
                 auth=(username,password),
                 headers=headers,
                 params=({
@@ -62,27 +59,41 @@ def get_inmail(aconex_id,strt_date,end_date):
     return root
 
 
-# Generates a list of project mail, using "List Mail (Version 2) in the Aconex Mail API"
+# 
 def get_outmail(aconex_id,strt_date,end_date):
+    """
+    Generates a list of project mail, using "List Mail (Version 2) in the Aconex Mail API"
+    """
     mailbox='sentbox' #mailbox for querrying, available alternatives are: inbox, sentbox, draftbox
-    srch_qry='sentdate:[{0} TO {1}]'.format(strt_date,end_date)
+    srch_qry=f'sentdate:[{strt_date} TO {end_date}]'
     r_fields=('corrtypeid') #check mail schema first to confirm result field availability - Available options: subject,sentdate,responsedate
     s_field='sentdate' #results sorted by correspondence type 
-    data=rq.get('https://uk1.aconex.co.uk/api/projects/{0}/mail'.format(aconex_id),auth=(username,password),headers=headers,params=({'mail_box':mailbox,'search_query':srch_qry,'return_fields':r_fields,'sort_field':s_field}))
+    data=rq.get(f'https://uk1.aconex.co.uk/api/projects/{aconex_id}/mail',
+                auth=(username,password),
+                headers=headers,
+                params=(
+                  {'mail_box':mailbox,'search_query':srch_qry,'return_fields':r_fields,'sort_field':s_field}
+                  ))
     root=ET.fromstring(data.text)
     return root
 
 
 
-# GETS metadata for individual mails using 'View Mail Metadata (V2)'
 def get_mailmeta(aconex_id,mail_id):
-    data=rq.get('https://uk1.aconex.co.uk/api/projects/{0}/mail/{1}'.format(aconex_id,mail_id),auth=(username,password),headers=headers)
+    """
+    GETS metadata for individual mails using 'View Mail Metadata (V2)'
+    """
+    data=rq.get(f'https://uk1.aconex.co.uk/api/projects/{aconex_id}/mail/{mail_id}',
+                auth=(username,password),
+                headers=headers)
     #root=ET.fromstring(data.text)
     return data
 
 
-# Function creates a dictionary of mail ids for a project
 def prj_mails(mail_root):
+  """
+  creates a dictionary of mail ids for a project
+  """
   prj_mails={}
   counter=0
   for mail in mail_root.findall('.//Mail'):
@@ -133,7 +144,7 @@ def maildata3(mailmeta_root):
 
 
 #Running project search query and retrieving project list for user.
-prj_headers={'User':username,'Authorization': 'Bearer {0}'.format(key)}
+prj_headers={'User':username,'Authorization': f'Bearer {key}'}
 prj_data=rq.get('https://uk1.aconex.co.uk/api/projects',auth=(username,password),headers=prj_headers)
 prj_root=ET.fromstring(prj_data.text) #Bringing data into element tree for processing
 #[elem.tag for elem in prj_root.iter()] #Optional step to check data structure
