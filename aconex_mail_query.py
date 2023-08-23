@@ -104,44 +104,44 @@ def prj_mails(mail_root):
 
 # THIS FUNCTION CAPTURES SOME OF THE AVAILABLE #Option to permanently save temporary csv file to Google Drive.
 # Note requires authentication in Section 3.
-def maildata3(mailmeta_root):
-  try:
-    prj_id=mailmeta_root.find('ProjectId').text
-  except:
-    prj_id='NONE'
-  try:
-    corrtype=mailmeta_root.find('CorrespondenceType').text
-  except:
-    corrtype='NONE'
-  try:
-    sentdate=mailmeta_root.find('SentDate').text
-  except:
-    sentdate='NONE'
-  try:
-    status=mailmeta_root.find('Status').text
-  except:
-    status='NONE'
-  try:
-    subject=mailmeta_root.find('Subject').text
-  except:
-    subject='NONE'
-  try:
-    mailthread=mailmeta_root.find('ThreadId')
-  except:
-    mailthread='NONE'
+# def maildata3(mailmeta_root):
+#   try:
+#     prj_id=mailmeta_root.find('ProjectId').text
+#   except:
+#     prj_id='NONE'
+#   try:
+#     corrtype=mailmeta_root.find('CorrespondenceType').text
+#   except:
+#     corrtype='NONE'
+#   try:
+#     sentdate=mailmeta_root.find('SentDate').text
+#   except:
+#     sentdate='NONE'
+#   try:
+#     status=mailmeta_root.find('Status').text
+#   except:
+#     status='NONE'
+#   try:
+#     subject=mailmeta_root.find('Subject').text
+#   except:
+#     subject='NONE'
+#   try:
+#     mailthread=mailmeta_root.find('ThreadId')
+#   except:
+#     mailthread='NONE'
 
-  mail=mailmeta_root.attrib['MailId']
+#   mail=mailmeta_root.attrib['MailId']
 
-  coredata=[prj_id,mail,sentdate,corrtype,subject,status,mailthread]
+#   coredata=[prj_id,mail,sentdate,corrtype,subject,status,mailthread]
 
-  for mff in mailmeta_root.findall('.//MailFormField'):
-      coredata.append(mff.find('Label').text)
-      coredata.append(mff.find('Value').text)
-  return coredata
+#   for mff in mailmeta_root.findall('.//MailFormField'):
+#       coredata.append(mff.find('Label').text)
+#       coredata.append(mff.find('Value').text)
+#   return coredata
+
 
 
 # GETTING LIST OF PROJECTS
-
 
 #Running project search query and retrieving project list for user.
 prj_headers={'User':username,'Authorization': f'Bearer {key}'}
